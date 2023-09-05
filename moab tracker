@@ -1,0 +1,28 @@
+script.Parent = game.Players.LocalPlayer.Character
+script.Name = "MOABPositionTracker"
+print("Init")
+for _, playercheck in ipairs(game.Players:GetChildren()) do
+    if playercheck.Name ~= game.Players.LocalPlayer.Name then
+        local character = game.Workspace:FindFirstChild(playercheck.Name)
+        if character and not character:FindFirstChild("MOABPositionTracker") then
+            print("Found user without MOAB")
+            wait(0.1)
+            script.Parent = character
+        end
+    end
+end
+
+while true do
+    local PositionA = Vector3.new(script.Parent:WaitForChild("HumanoidRootPart").Position.X, 0, script.Parent:WaitForChild("HumanoidRootPart").Position.Z)
+    wait(1)
+    local PositionB = Vector3.new(script.Parent:WaitForChild("HumanoidRootPart").Position.X, 0, script.Parent:WaitForChild("HumanoidRootPart").Position.Z)
+    if (PositionA - PositionB).Magnitude >= 40 then
+        print("MAJOR FLAG: " .. (script.Parent.Name) .. " has been flagged.")
+        local CurrentText = game.Players.LocalPlayer.PlayerGui:WaitForChild("ScreenGui").StatsFrame.ConsoleFrame.UserFlags.Text
+        game.Players.LocalPlayer.PlayerGui:WaitForChild("ScreenGui").StatsFrame.ConsoleFrame.UserFlags.Text = CurrentText .. (script.Parent.Name) .. "\n"
+        local NewPosA = Vector3.new(PositionA.X, script.Parent:WaitForChild("HumanoidRootPart").Position.Y, PositionA.Z)
+        --script.Parent:MoveTo(NewPosA)
+    else
+        local PositionA = PositionB
+    end
+end
